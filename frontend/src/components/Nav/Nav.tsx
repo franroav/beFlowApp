@@ -50,6 +50,11 @@ function Nav(): JSX.Element {
                   Inicio
                 </Link>
               </div>
+              <div className="btn-group">
+                <Link to="/payments" className="btn btn-dark">
+                  Payments
+                </Link>
+              </div>
             </Toolbar>
           </AppBar>
           <hr />

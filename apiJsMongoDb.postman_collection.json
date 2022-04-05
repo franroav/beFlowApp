@@ -1,0 +1,116 @@
+{
+	"info": {
+		"_postman_id": "086fe79e-4db0-4d65-9623-b3e1502cc73f",
+		"name": "apiJsMongoDb",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "getAllPaymentsRecords",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": null
+			},
+			"response": []
+		},
+		{
+			"name": "getSinglePaymentRecord",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": null
+			},
+			"response": []
+		},
+		{
+			"name": "CreatePaymentRecord",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n   \"description\": \"Pago\",\r\n   \"billed_hours\": 1.5,\r\n   \"billed_at\": \"2020-04-01\",\r\n   \"billing_currency\": \"clf\",\r\n   \"billed_amount\": 1.5,\r\n   \"needs_exchange\": true,\r\n   \"exchange_currency\": \"clp\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/payment",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"payment"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdatePaymentRecord",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n   \"id\":\"6249e66cd1ecca1bcc2642e9\",\r\n   \"description\":\"Pago\",\r\n   \"billed_hours\":1.5,\r\n   \"billed_at\":\"2020-04-01\",\r\n   \"billing_currency\":\"clf\",\r\n   \"billed_amount\":1.5,\r\n   \"needs_exchange\":true,\r\n   \"exchange_currency\":\"clp\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/payments/6249e66cd1ecca1bcc2642e9",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"payments",
+						"6249e66cd1ecca1bcc2642e9"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "miIndicadorApi",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": null
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteSinglePaymentRecord",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/api/payments/6249e66cd1ecca1bcc2642e9",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"payments",
+						"6249e66cd1ecca1bcc2642e9"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

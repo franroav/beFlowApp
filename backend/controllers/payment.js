@@ -11,20 +11,8 @@ const moment = require("moment"); // require
  */
 const getAll = async (req, res = response) => {
   try {
-    //const api = new miIndicadorApiService();
-    //const ufCollection = await api.searchAll();
-    // const data = { data: "hola" };
     const payments = await Payment.find();
-
     const paymentTemplate = await serviceTemplate(payments);
-
-    /*   const payments = await Payment.find().populate('user', 'email').populate('shop', 'name');
-
-        const totalPaymentsPerUser = getListPaymentsForUserAndShopCredits(payments);
-
-        return res.json({
-            payments: totalPaymentsPerUser
-        });*/
     return res.status(200).json({
       payments: paymentTemplate,
     });
@@ -221,7 +209,7 @@ async function serviceTemplate(payments) {
         exchange: {
           original_amount: payment.billed_amount,
           currency: payment.exchange_currency,
-          exchange_rate: null,
+          exchange_rate: payment.billed_hours * payment.billed_amount,
         },
         created_at: payment.created_at,
         updated_at: payment.created_at,
@@ -231,161 +219,6 @@ async function serviceTemplate(payments) {
   }
   return templatePayments;
 }
-
-const getAllForUser = async (req, res = response) => {
-  // const email = req.params.email;
-
-  // const userBd = await User.findOne({email});
-
-  try {
-    /*     const payments = await Payment.find({user: userBd._id}).populate('user', 'email').populate('shop', 'name');
-
-        const totalListPaymentsPerUser = getListPaymentsForUserAndShopCredits(payments);
-        let totalPaymentsPerUser = {};
-        if(totalListPaymentsPerUser.length == 1){
-            totalPaymentsPerUser = totalListPaymentsPerUser[0];
-        }
-
-        return res.json({
-            payment: totalPaymentsPerUser
-        });*/
-  } catch (err) {
-    console.log(err);
-    throw res.status(500).json({
-      msg: ` Error, no se ha podido acceder a los datos de creditos. `,
-    });
-  }
-};
-
-const getAllForUserAndShop = async (req, res = response) => {
-  //  const { email, shop } = req.params;
-
-  // const userBd = await User.findOne({email});
-  //  const shopBd = await Shop.findOne({name: shop});
-
-  try {
-    /*   const payments = await Payment.find({user: userBd._id, shop: shopBd._id}).populate('user', 'email').populate('shop', 'name');
-
-        const totalListPaymentsPerUser = getListPaymentsForUserAndShopCredits(payments);
-        let totalPaymentsPerUser = {};
-        
-        if(totalListPaymentsPerUser.length == 1){
-            totalPaymentsPerUser = totalListPaymentsPerUser.reduce((total, payment)=> {
-                if(payment.credits.length == 1){
-                    let paymentUserShop = {
-                        userId: payment.userId,
-                        email: payment.email,
-                        credit: payment.credits[0]
-                    }
-                    
-                    total = paymentUserShop;
-                }
-                
-                return total;
-            },{});
-        }
-
-        return res.json({
-            payment: totalPaymentsPerUser
-        });*/
-  } catch (err) {
-    console.log(err);
-    throw res.status(500).json({
-      msg: ` Error, no se ha podido acceder a los datos de creditos. `,
-    });
-  }
-};
-
-const addCreditsToUser = async (req, res = response) => {
-  /*  let { emailUser, shop, credit } = req.body;
-
-    const userBd = await User.findOne({email: emailUser});
-    const shopBd = await Shop.findOne({name: shop});
-    
-    if(credit.includes("-")){
-        credit =  Number(credit) * -1;
-    }*/
-
-  try {
-    /*  let payment = new Payment({ 
-            credit, 
-            user: userBd._id,
-            shop: shopBd._id
-        }); 
-
-        await payment.save();
-
-        return res.status(201).json({
-            payment
-        });*/
-  } catch (err) {
-    console.log(err);
-    throw res.status(500).json({
-      msg: ` Error interno de la aplicación! `,
-    });
-  }
-};
-
-const removeCreditsToUser = async (req, res = response) => {
-  /* let { emailUser, shop, credit } = req.body;
-
-    const userBd = await User.findOne({email: emailUser});
-    const shopBd = await Shop.findOne({name: shop});
-
-    if(!credit.includes("-")){
-        credit =  Number(credit) * -1;
-    }*/
-
-  try {
-    /*  let payment = new Payment({ 
-            credit, 
-            user: userBd._id,
-            shop: shopBd._id
-        }); 
-
-        await payment.save();
-
-        return res.status(201).json({
-            payment
-        });*/
-  } catch (err) {
-    console.log(err);
-    throw res.status(500).json({
-      msg: ` Error interno de la aplicación! `,
-    });
-  }
-};
-
-const getListPaymentsForUserAndShopCredits = (payments, initialState) => {
-  /*  const totalPaymentsPerUser = payments.reduce((totalPayment, payment) => {
-        let creditShop = {
-            shopId: payment.shop._id,
-            name: payment.shop.name,
-            credit: payment.credit
-        }
-
-        let existUserInTotal = totalPayment.find(totalPay => totalPay.userId === payment.user._id); // find user
-        if(existUserInTotal){
-            let existShopInTotal = existUserInTotal.credits.find(creditShop => creditShop.shopId === payment.shop._id); //find shop
-            if(existShopInTotal){
-                existShopInTotal.credit += payment.credit; // sum credits
-            }else{
-                existUserInTotal.credits.push(creditShop); // add new credit
-            }
-        }else{
-            let totalPay = {
-                userId: payment.user._id,
-                email: payment.user.email,
-                credits: [ creditShop ]
-            }
-            totalPayment.push(totalPay);
-        }
-
-        return totalPayment;
-    }, []); 
-
-    return totalPaymentsPerUser;*/
-};
 
 module.exports = {
   getAll,

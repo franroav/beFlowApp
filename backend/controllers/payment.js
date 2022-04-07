@@ -31,13 +31,23 @@ const getAll = async (req, res = response) => {
  */
 const create = async (req, res = response) => {
   try {
-    let { needs_exchange, billing_currency, exchange_currency, billed_at } =
-      req.body;
+    let {
+      needs_exchange,
+      billing_currency,
+      billed_amount,
+      billed_hours,
+      exchange_currency,
+      billed_at,
+    } = req.body;
     if (
       billing_currency === undefined ||
       billing_currency === null ||
       billed_at === null ||
-      billed_at === undefined
+      billed_at === undefined ||
+      billed_amount === undefined ||
+      billed_amount === null ||
+      billed_hours === undefined ||
+      billed_hours === null
     ) {
       throw res.status(400).json({
         message: ` Error, Bad request`,
@@ -55,23 +65,24 @@ const create = async (req, res = response) => {
         msg: `Not record fount with ${billing_currency}`,
       });
     }
-    const register = collection.payload.serie.filter((uf) =>
-      uf.fecha.includes(billed_at)
+    const register = collection.payload.serie.filter((indicator) =>
+      indicator.fecha.includes(billed_at)
     );
+    const valueFromApi = register[0].valor;
     const template = {
       ...req.body,
-      billed_amount: register[0].valor,
       created_at: moment(new Date()).format(),
       updated_at: moment(new Date()).format(),
     };
 
     let payment = new Payment(template);
     const { _id } = payment;
-    const paymentTemplate = await serviceTemplate([template]);
+    const paymentTemplate = await exchangeFix(template, valueFromApi);
     await payment.save();
-    paymentTemplate[0]._id = _id;
-    paymentTemplate[0].object = null;
-    return res.status(200).json(paymentTemplate[0]);
+    console.log(paymentTemplate);
+    paymentTemplate._id = _id;
+    paymentTemplate.object = null;
+    return res.status(200).json(paymentTemplate);
   } catch (err) {
     console.log(err);
     throw res.status(500).json({
@@ -125,9 +136,26 @@ const update = async (req, res = response) => {
       needs_exchange,
       exchange_currency,
     } = req.body;
+    const api = new miIndicadorApiService();
+    const collection = await api.searchAllByCurrency(billing_currency);
+    if (collection === undefined || collection === null) {
+      throw res.status(404).json({
+        message: ` Error, Not Found`,
+      });
+    }
+    if (collection.httpResponseCode === 500) {
+      throw res.status(404).json({
+        msg: `Not record fount with ${billing_currency}`,
+      });
+    }
+    const register = collection.payload.serie.filter((indicator) =>
+      indicator.fecha.includes(billed_at)
+    );
+    const valueFromApi = register[0].valor;
     payment = await Payment.findOne({
       _id: id,
     });
+
     payment.description = description;
     payment.billed_hours = billed_hours;
     payment.billed_at = billed_at;
@@ -135,6 +163,8 @@ const update = async (req, res = response) => {
     payment.billed_amount = billed_amount;
     payment.needs_exchange = needs_exchange;
     payment.exchange_currency = exchange_currency;
+    payment.exchange.exchange_rate =
+      billed_hours * billed_amount * valueFromApi;
 
     const paymentUpdate = await Payment.updateOne(
       {
@@ -219,7 +249,25 @@ async function serviceTemplate(payments) {
   }
   return templatePayments;
 }
-
+async function exchangeFix(payments, valor) {
+  const template = {
+    _id: payment._id,
+    object: payment.object,
+    description: payment.description,
+    billed_hours: payment.billed_hours,
+    billed_at: payment.billed_at,
+    amount: payment.billed_amount,
+    currency: payment.exchange_currency,
+    exchange: {
+      original_amount: payment.billed_amount,
+      currency: payment.exchange_currency,
+      exchange_rate: valor * payment.billed_hours * payment.billed_amount,
+    },
+    created_at: payment.created_at,
+    updated_at: payment.created_at,
+  };
+  return template;
+}
 module.exports = {
   getAll,
   update,

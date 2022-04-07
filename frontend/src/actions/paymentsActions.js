@@ -19,17 +19,8 @@ import {
 import { getAllIndicators } from "../services/indicator.service.js";
 
 export const getAllPayments = (payments, element) => (dispatch) => {
-  /*getAllIndicators().then((res) => {
-    console.log({ res });
-  });*/
-
   getAllIndicators()
     .then((response) => {
-      //const data = [response];
-      // const collection = [];
-      //collection.push(response);
-
-      //console.log({ collection });
       dispatch(fetchPaymentsReducer(response));
     })
     .catch(() => {});

@@ -7,7 +7,6 @@ const getAllIndicators = async () => {
       url: baseUrl,
     }).then(
       (result) => {
-        console.log({ result });
         return result.data;
       },
       (error) => {

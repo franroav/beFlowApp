@@ -51,8 +51,8 @@ function Nav(): JSX.Element {
                 </Link>
               </div>
               <div className="btn-group">
-                <Link to="/payments" className="btn btn-dark">
-                  Payments
+                <Link to="/indicadores" className="btn btn-dark">
+                  Indicadores
                 </Link>
               </div>
             </Toolbar>
@@ -62,17 +62,8 @@ function Nav(): JSX.Element {
             <Route path="/" exact>
               <Inicio />
             </Route>
-            <Route path="/payments" exact>
+            <Route path="/indicadores" exact>
               <Payments />
-            </Route>
-            <Route path="/payments/details/:id" exact>
-              <PaymentDetail />
-            </Route>
-            <Route path="/payments/create" exact>
-              <PaymentCreate />
-            </Route>
-            <Route path="/payments/edit/:id" exact>
-              <PaymentEdit />
             </Route>
           </Switch>
         </div>

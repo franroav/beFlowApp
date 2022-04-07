@@ -16,9 +16,20 @@ import {
   deleteById,
 } from "../services/payments.service";
 
+import { getAllIndicators } from "../services/indicator.service.js";
+
 export const getAllPayments = (payments, element) => (dispatch) => {
-  getAll()
+  /*getAllIndicators().then((res) => {
+    console.log({ res });
+  });*/
+
+  getAllIndicators()
     .then((response) => {
+      //const data = [response];
+      // const collection = [];
+      //collection.push(response);
+
+      //console.log({ collection });
       dispatch(fetchPaymentsReducer(response));
     })
     .catch(() => {});
